@@ -1,0 +1,8 @@
+[install]
+whitelist = [ "random-pure-tests" ]
+
+[custom.all.random-pure]
+type = "local"
+path = "."
+ipkg = "random-pure.ipkg"
+test = "tests/tests.ipkg"

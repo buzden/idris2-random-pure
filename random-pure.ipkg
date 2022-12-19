@@ -1,0 +1,12 @@
+package random-pure
+version = 0.1.0
+authors = "Denis Buzdalov"
+license = "Apache-2.0"
+brief = "Pure pseudo-random interface and splitmix implementation"
+
+sourcedir = "src"
+
+depends = base
+
+modules = System.Random.Pure
+        , System.Random.Pure.StdGen
