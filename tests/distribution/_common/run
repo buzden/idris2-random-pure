@@ -1,6 +1,6 @@
 rm -rf build
 
-pack -q install-deps test.ipkg
-$1 --exec main --no-color --console-width 0 --no-banner --find-ipkg CheckDistribution.idr
+flock "$1" pack -q install-deps test.ipkg
+idris2 --exec main --no-color --console-width 0 --no-banner --find-ipkg CheckDistribution.idr
 
 rm -rf build
