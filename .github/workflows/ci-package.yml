@@ -24,24 +24,21 @@ defaults:
     shell: bash
 
 env:
-  package_name: random-pure
   PACK_DIR: /root/.pack
 
 jobs:
 
   build-and-test:
-    name: Build and test `${{ env.package_name }}`
+    name: Build and test `${{ github.repository }}`
     runs-on: ubuntu-latest
     container: ghcr.io/stefan-hoeck/idris2-pack:latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Switch to a specific `pack` collection
-        if: github.event_name != 'schedule'
-        run: pack switch "$(cat .pack-collection)"
-      - name: Switch to the latest `pack` collection
-        if: github.event_name == 'schedule'
-        run: pack switch latest
+      - name: Switch to appropriate `pack` collection
+        run: pack switch "$( if [[ '${{ github.event_name }}' == 'schedule' ]]; then echo latest; else cat .pack-collection; fi )"
+      - name: Compute the package name
+        run: echo "package_name=$(sed -e 's|.*/||' -e 's/idris2\?-//' <<< ${{ github.repository }})" >> "$GITHUB_ENV"
       - name: Build `${{ env.package_name }}`
         run: pack build ${{ env.package_name }}
       - name: Test `${{ env.package_name }}`
