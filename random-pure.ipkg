@@ -8,5 +8,8 @@ sourcedir = "src"
 
 depends = base
 
-modules = System.Random.Pure
+modules = Control.Monad.Random
+        , Control.Monad.Random.Interface
+        , Control.Monad.Random.Random
+        , System.Random.Pure
         , System.Random.Pure.StdGen
