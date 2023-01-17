@@ -1,0 +1,43 @@
+---
+name: Build and test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - '**'
+  pull_request:
+    branches:
+      - main
+      - master
+  schedule:
+    - cron: '0 1 * * *'
+
+concurrency:
+  group: ${{ github.workflow_ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PACK_DIR: /root/.pack
+
+jobs:
+
+  build-and-test:
+    name: Build and test `random-pure`
+    runs-on: ubuntu-latest
+    container: ghcr.io/stefan-hoeck/idris2-pack:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Switch to appropriate `pack` collection
+        run: pack switch "$( if [[ '${{ github.event_name }}' == 'schedule' ]]; then echo latest; else cat .pack-collection; fi )"
+      - name: Build `random-pure`
+        run: pack build random-pure
+      - name: Test `random-pure`
+        run: pack test random-pure
