@@ -13,8 +13,9 @@ import Data.Fin
 
 public export
 interface RandomGen g where
-  next  : g -> (g, Bits64)
-  split : g -> (g, g)
+  next    : g -> (g, Bits64)
+  split   : g -> (g, g)
+  variant : Nat -> g -> g
 
 --------------------------------------------------------
 --- Types for which values can be randomly generated ---

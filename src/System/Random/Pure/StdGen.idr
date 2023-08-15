@@ -47,6 +47,7 @@ data StdGen = MkStdGen Bits64 Bits64
 
 export
 RandomGen StdGen where
+
   next $ MkStdGen seed gamma = do
     let seed' = seed + gamma
     (MkStdGen seed' gamma, mix64 seed')
@@ -55,6 +56,9 @@ RandomGen StdGen where
     let seed'  = seed + gamma
         seed'' = seed' + gamma
     (MkStdGen seed'' gamma, MkStdGen (mix64 seed') (mixGamma seed''))
+
+  -- idea taken from https://github.com/qfpl/hedgehog-fn/blob/2621548943ffa46c98f430cca6beeb9025ea3127/src/Hedgehog/Function/Internal.hs#L73
+  variant v $ MkStdGen seed gamma = MkStdGen (seed + cast v) gamma
 
 export
 StdGenShow : Show StdGen
