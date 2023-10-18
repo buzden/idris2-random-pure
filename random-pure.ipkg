@@ -5,6 +5,7 @@ license = "Apache-2.0"
 brief = "Pure pseudo-random interface and splitmix implementation"
 
 sourcedir = "src"
+builddir = ".build"
 
 depends = base
 
