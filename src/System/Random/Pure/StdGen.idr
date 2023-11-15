@@ -4,6 +4,7 @@ module System.Random.Pure.StdGen
 
 import Data.Bits
 import Data.Vect
+import public Data.So
 
 import Deriving.Show
 
@@ -61,19 +62,27 @@ RandomGen StdGen where
   variant v $ MkStdGen seed gamma = MkStdGen (seed + cast v) gamma
 
 export
-StdGenShow : Show StdGen
-StdGenShow = %runElab derive
+Show StdGen where
+  -- since the constructor is not public, creation of literally any value
+  -- can be done through a smart-constructor, so, showing it through it.
+  showPrec d $ MkStdGen s g = showCon d "rawStdGen" $ showArg s ++ showArg g
 
 --- Creation of `StdGen` values ---
 
+export %inline
+rawStdGen : (seed, gamma : Bits64) -> (0 gammaIsOdd : So $ testBit gamma 0) => StdGen
+rawStdGen s g = MkStdGen s g
+
+||| The most preferrable, but not invertible way for creation specific seed values
 export
 mkStdGen : Bits64 -> StdGen
-mkStdGen s = MkStdGen (mix64 s) (mixGamma (s + goldenGamma)) where
+mkStdGen s = MkStdGen (mix64 s) (mixGamma (s + goldenGamma))
 
 export
 someStdGen : StdGen
-someStdGen = MkStdGen 23462 254334222987
+someStdGen = rawStdGen 23462 254334222987
 
+||| The way of creation of a seed value based on some system entropy
 export
 initStdGen : HasIO io => io StdGen
 initStdGen = pure $ mkStdGen $ cast !time `xor` cast !getPID
