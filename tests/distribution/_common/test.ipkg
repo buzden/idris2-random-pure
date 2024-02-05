@@ -4,4 +4,4 @@ authors = "Denis Buzdalov"
 
 main = CheckDistribution
 
-depends = random-pure, summary-stat, contrib
+depends = random-pure, summary-stat
