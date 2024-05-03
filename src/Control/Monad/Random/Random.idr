@@ -2,9 +2,12 @@ module Control.Monad.Random.Random
 
 import Data.Ref
 
+import Control.Monad.Error.Interface
 import public Control.Monad.Identity
 import public Control.Monad.Random.Interface
+import Control.Monad.Reader.Interface
 import Control.Monad.State
+import Control.Monad.Writer.Interface
 
 import System.Random.Pure
 import System.Random.Pure.StdGen
@@ -73,6 +76,27 @@ MonadTrans RandomT where
 public export %inline
 HasIO m => HasIO (RandomT m) where
   liftIO x = MkRandomT $ liftIO x
+
+public export %inline
+MonadReader r m => MonadReader r (RandomT m) where
+  ask = lift ask
+  local f (MkRandomT x) = MkRandomT $ local f x
+
+public export %inline
+MonadWriter w m => MonadWriter w (RandomT m) where
+  tell = lift . tell
+  pass (MkRandomT x) = MkRandomT $ pass x
+  listen (MkRandomT x) = MkRandomT $ listen x
+
+public export %inline
+MonadState s m => MonadState s (RandomT m) where
+  put = lift . put
+  get = lift get
+
+public export %inline
+MonadError e m => MonadError e (RandomT m) where
+  throwError = lift . throwError
+  catchError (MkRandomT x) h = MkRandomT $ catchError x $ unRandomT . h
 
 --- `MonadRandom` implementation ---
 
