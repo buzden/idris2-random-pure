@@ -11,6 +11,10 @@ import Data.Fin
 --- Interface for seed types ---
 --------------------------------
 
+||| Interface of algorithms of pseudo-random generation of `Bits64` values using a seed type `g`.
+|||
+||| Those `Bits64` values must be generated uniformly.
+||| Splitting must given independent seeds.
 public export
 interface RandomGen g where
   next    : g -> (g, Bits64)
@@ -21,6 +25,11 @@ interface RandomGen g where
 --- Types for which values can be randomly generated ---
 --------------------------------------------------------
 
+||| Interface for generation of values of particular types using any appropriate `RandomGen` algorithm.
+|||
+||| Contains a function for generation of uniform value sitting in the given range,
+||| and a function for generation of any value of the type.
+||| For inifinite types, when no range is given, implementation determines actual used range by itself.
 public export
 interface Random a where
   randomR : RandomGen g => (a, a) -> g -> (g, a)
