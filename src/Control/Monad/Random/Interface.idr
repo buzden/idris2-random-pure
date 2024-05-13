@@ -19,6 +19,10 @@ interface Monad m => MonadRandom m where
 
   independent : m a -> m a
 
+public export %inline
+getRandomFor : MonadRandom m => (0 a : _) -> Random a => m a
+getRandomFor _ = getRandom
+
 --- Lifting implementations for standard transformers ---
 
 export

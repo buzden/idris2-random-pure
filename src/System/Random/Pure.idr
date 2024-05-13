@@ -26,6 +26,10 @@ interface Random a where
   randomR : RandomGen g => (a, a) -> g -> (g, a)
   random  : RandomGen g => g -> (g, a)
 
+public export %inline
+randomFor : RandomGen g => (0 a : _) -> Random a => g -> (g, a)
+randomFor _ = random
+
 export
 randomR' : Random a => RandomGen g => MonadState g m => (a, a) -> m a
 randomR' bounds = let (g, x) = randomR bounds !get in put g $> x
@@ -33,6 +37,10 @@ randomR' bounds = let (g, x) = randomR bounds !get in put g $> x
 export
 random' : Random a => RandomGen g => MonadState g m => m a
 random' = let (g, x) = random !get in put g $> x
+
+public export %inline
+randomFor' : RandomGen g => MonadState g m => (0 a : _) -> Random a => m a
+randomFor' _ = random'
 
 export
 randomThru : (0 thru : _) -> Random thru => (from : thru -> a) -> (to : a -> thru) -> Random a
