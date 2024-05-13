@@ -82,6 +82,30 @@ RandomInt64 = randomThru Bits64 (fromInteger . (\x => x - diff) . cast) (fromInt
   diff = 1 `shiftL` 63
 
 export %hint
+RandomBits32 : Random Bits32
+RandomBits32 = randomThru Bits64 cast cast
+
+export %hint
+RandomInt32 : Random Int32
+RandomInt32 = randomThru Int64 cast cast
+
+export %hint
+RandomBits16 : Random Bits16
+RandomBits16 = randomThru Bits64 cast cast
+
+export %hint
+RandomInt16 : Random Int16
+RandomInt16 = randomThru Int64 cast cast
+
+export %hint
+RandomBits8 : Random Bits8
+RandomBits8 = randomThru Bits64 cast cast
+
+export %hint
+RandomInt8 : Random Int8
+RandomInt8 = randomThru Int64 cast cast
+
+export %hint
 RandomInt : Random Int
 RandomInt = randomThru Int64 cast cast
 
