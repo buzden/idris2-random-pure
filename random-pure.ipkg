@@ -8,6 +8,7 @@ sourcedir = "src"
 builddir = ".build"
 
 depends = base
+        , prettier
 
 modules = Control.Monad.Random
         , Control.Monad.Random.Interface
