@@ -11,6 +11,9 @@ import Deriving.Show
 import System
 import public System.Random.Pure
 
+import Text.PrettyPrint.Bernardy.Core
+import Text.PrettyPrint.Bernardy.Interface
+
 %default total
 %language ElabReflection
 
@@ -47,6 +50,10 @@ export
 data StdGen = MkStdGen Bits64 Bits64
 
 export
+Eq StdGen where
+  MkStdGen seed gamma == MkStdGen seed' gamma' = seed == seed' && gamma == gamma'
+
+export
 RandomGen StdGen where
 
   next $ MkStdGen seed gamma = do
@@ -66,6 +73,10 @@ Show StdGen where
   -- since the constructor is not public, creation of literally any value
   -- can be done through a smart-constructor, so, showing it through it.
   showPrec d $ MkStdGen s g = showCon d "rawStdGen" $ showArg s ++ showArg g
+
+export
+Pretty StdGen where
+  prettyPrec d $ MkStdGen s g = prettyCon d "rawStdGen" [prettyArg s, prettyArg g]
 
 --- Creation of `StdGen` values ---
 
