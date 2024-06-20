@@ -2,7 +2,7 @@
 -- https://hackage.haskell.org/package/splitmix-0.1.0.4/docs/src/System.Random.SplitMix.html
 module System.Random.Pure.StdGen
 
-import Data.Bits
+import public Data.Bits
 import Data.Vect
 import public Data.So
 
