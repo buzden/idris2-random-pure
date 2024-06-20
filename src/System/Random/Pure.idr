@@ -1,6 +1,6 @@
 module System.Random.Pure
 
-import Control.Monad.State
+import Control.Monad.State.Interface
 
 import Data.Bits
 import Data.Fin
@@ -20,6 +20,15 @@ interface RandomGen g where
   next    : g -> (g, Bits64)
   split   : g -> (g, g)
   variant : Nat -> g -> g
+
+||| Interface for getting the starting seed
+public export
+interface RandomGen g => CanInitSeed g m | m where
+  initSeed : m g
+
+export
+ConstSeed : Applicative m => RandomGen g => g -> CanInitSeed g m
+ConstSeed seed = S where [S] CanInitSeed g m where initSeed = pure seed
 
 --------------------------------------------------------
 --- Types for which values can be randomly generated ---
