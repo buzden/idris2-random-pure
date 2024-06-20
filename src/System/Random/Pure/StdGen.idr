@@ -97,3 +97,7 @@ someStdGen = rawStdGen 23462 254334222987
 export
 initStdGen : HasIO io => io StdGen
 initStdGen = pure $ mkStdGen $ cast !time `xor` cast !getPID
+
+export %defaulthint
+EntropySeed : HasIO m => CanInitSeed StdGen m
+EntropySeed = E where [E] CanInitSeed StdGen m where initSeed = initStdGen
