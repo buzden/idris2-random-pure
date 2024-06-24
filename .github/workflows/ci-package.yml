@@ -60,7 +60,15 @@ jobs:
       fail-fast: false
       matrix:
         upstream-mode: ${{ fromJSON(needs.get-upstream-matrix.outputs.upstream-matrix) }}
+        codegen:
+          - chez
+          - racket
+    env:
+      IDRIS2_CG: ${{ matrix.codegen }}
     steps:
+      - name: Install runtime, if needed
+        if: ${{ matrix.codegen == 'racket' }}
+        run: apt-get update && apt-get -y install racket && rm -rf /var/lib/apt/lists/*
       - name: Checkout
         uses: actions/checkout@v4
       - name: Update `pack-db`
