@@ -78,6 +78,10 @@ export
 Pretty StdGen where
   prettyPrec d $ MkStdGen s g = prettyCon d "rawStdGen" [prettyArg s, prettyArg g]
 
+export
+extractRaw : StdGen -> (Bits64, Bits64)
+extractRaw $ MkStdGen seed gamma = (seed, gamma)
+
 --- Creation of `StdGen` values ---
 
 export %inline
