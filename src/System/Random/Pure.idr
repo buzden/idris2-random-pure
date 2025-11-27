@@ -14,21 +14,33 @@ import Data.Fin
 ||| Interface of algorithms of pseudo-random generation of `Bits64` values using a seed type `g`.
 |||
 ||| Those `Bits64` values must be generated uniformly.
-||| Splitting must given independent seeds.
+||| Splitting must give independent seeds.
 public export
 interface RandomGen g where
   next    : g -> (g, Bits64)
   split   : g -> (g, g)
   variant : Nat -> g -> g
 
+||| Stream of independent seeds
+public export
+splitStream : RandomGen g => g -> Stream g
+splitStream seed = do
+  let (l, r) = split seed
+  l :: splitStream r
+
 ||| Interface for getting the starting seed
 public export
 interface RandomGen g => CanInitSeed g m | m where
   initSeed : m g
 
-export
+export %inline
 ConstSeed : Applicative m => RandomGen g => g -> CanInitSeed g m
 ConstSeed seed = S where [S] CanInitSeed g m where initSeed = pure seed
+
+||| Stream of independent seeds in the current context of `CanInitSeed`
+public export %inline
+theSplitStream : CanInitSeed g m => Functor m => m $ Stream g
+theSplitStream = splitStream <$> initSeed
 
 --------------------------------------------------------
 --- Types for which values can be randomly generated ---
