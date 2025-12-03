@@ -9,6 +9,7 @@ import public Data.So
 import Deriving.Show
 
 import System
+import System.Clock
 import public System.Random.Pure
 
 import Text.PrettyPrint.Bernardy.Core
@@ -100,7 +101,9 @@ someStdGen = rawStdGen 23462 254334222987
 ||| The way of creation of a seed value based on some system entropy
 export
 initStdGen : HasIO io => io StdGen
-initStdGen = pure $ mkStdGen $ cast !time `xor` cast !getPID
+initStdGen = do
+  nano <- liftIO $ toNano <$> clockTime UTC
+  pure $ mkStdGen $ cast !time `xor` cast nano `xor` cast !getPID
 
 export %defaulthint
 EntropySeed : HasIO m => CanInitSeed StdGen m
